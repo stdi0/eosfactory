@@ -724,7 +724,6 @@ class AccountEosio():
 
 class AccountMaster(AccountEosio, _Eosf):
 
-    
     def is_local_testnet(self):
         account_ = cleos.GetAccount(self.name, json=True, is_verbose=-1)
         # print(cleos._wallet_url_arg)
@@ -742,7 +741,7 @@ class AccountMaster(AccountEosio, _Eosf):
             return False
 
     def __init__(
-            self, name="", owner_key_public="", active_key_public="", 
+            self, name="", account_object_name="", 
             is_verbose=1, verbosity=None):
 
         is_verbose = self.verify_is_verbose(verbosity, is_verbose)
@@ -787,7 +786,7 @@ class AccountMaster(AccountEosio, _Eosf):
         #cleos.set_wallet_url_arg(node, "")
 
         # not local testnet:
-        if not owner_key_public: # print data for registration
+        if not account_object_name: # print data for registration
             if not name: 
                 self.name = cleos.account_name()
             else:
@@ -808,16 +807,38 @@ class AccountMaster(AccountEosio, _Eosf):
                     self.active_key.key_public, self.active_key.key_private
                     ))
         else: # restore the master account
-            self.name = name
-            self.owner_key = cleos.CreateKey("owner", owner_key_public, is_verbose=0)
-            if not active_key_public:
-                self.active_key = owner_key
-            else:
-                self.active_key = cleos.CreateKey(
-                    "active", active_key_public, is_verbose=0)
-            account_ = cleos.GetAccount(name, is_verbose=-1)
+
+            account_ = cleos.GetAccount(name, json=True, is_verbose=-1)
+            print(json.dumps(account_.json, indent=4))
             if not account_.error:
                 self.account_info = str(account_)
+                self.name = name
+                self.key_public = \
+                account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"]
+
+                self.owner_key = cleos.CreateKey(
+                    "active", 
+                    account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"], 
+                    is_verbose=0)
+
+                self.owner_key = cleos.CreateKey(
+                    "owner", 
+                    account_.json["permissions"][0]["required_auth"]["keys"] \
+                    [0]["key"], 
+                    is_verbose=0)
+
+                account_map_json = account_map()
+                for acc_n in account_map_json:
+                    if account_map[acc_n] == account_object_name:
+                        account_map[acc_n] = account_object_name + "_" + acc_n
+                    
+                account_map[self.name] = account_object_name
+                
+
+                
+
 
 
     def info(self):
