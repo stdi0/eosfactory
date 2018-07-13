@@ -49,11 +49,9 @@ NEXT TEST ====================================================================
         setup.use_keosd(True)
         setup.set_nodeos_URL("88.99.97.30:38888")
         
-        print("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-        account_master = eosf.AccountMaster(
+        eosf.AccountMaster(
             "nbhyi5exmjcl", "account_master")
-        # print(account_master.info())
-        print("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+        print(account_master.info())
 
 
     # def test_is_not_running_not_keosd_set(self):
