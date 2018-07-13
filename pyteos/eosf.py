@@ -326,21 +326,6 @@ class Wallet(cleos.WalletCreate, _Eosf):
         """ Imports private keys of an account into wallet.
         Returns list of `cleos.WalletImport` objects
         """
-        # print("\ninspect.stack():\n")
-        # pprint.pprint(inspect.stack())
-        # print("\ninspect.stack()[1][0]:\n")
-        # pprint.pprint(inspect.stack()[1][0])
-        # print("\ninspect.stack()[1][0].f_locals:\n")
-        # pprint.pprint(inspect.stack()[1][0].f_locals)
-        # print("\ninspect.stack()[1][0].f_globals:\n")
-        # pprint.pprint(inspect.stack()[1][0].f_globals)
-
-        # print("\ninspect.stack()[2][0]:\n")
-        # pprint.pprint(inspect.stack()[2][0])
-        # print("\ninspect.stack()[2][0].f_locals:\n")
-        # pprint.pprint(inspect.stack()[2][0].f_locals)
-        # print("\ninspect.stack()[2][0].f_globals:\n")
-        # pprint.pprint(inspect.stack()[2][0].f_globals)
             
         lcls = dir()
         try:
@@ -371,7 +356,12 @@ class Wallet(cleos.WalletCreate, _Eosf):
                         print("'{}' ({}) >>> '{}'".format(
                             name, account_name, self.wallet_dir_ + setup.account_map))
 
+                    for acc_n in account_map:
+                        if account_map[acc_n] == name:
+                            account_map[acc_n] = name + "_" + acc_n
+                        
                     account_map[account_name] = name
+                    
                     with open(self.wallet_dir_ + setup.account_map, "w") as out:
                         out.write(json.dumps(account_map, sort_keys=True, indent=4))
 
