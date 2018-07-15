@@ -951,6 +951,8 @@ class CreateAccount(_Cleos):
             except:
                 permission_name = permission
             args.extend(["--permission", permission_name])
+        args.extend(["--expiration", str(expiration_sec)])
+
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -1069,6 +1071,8 @@ class SetContract(_Cleos):
                 permission_name = permission
             args.extend(["--permission", permission_name])
 
+        args.extend(["--expiration", str(expiration_sec)])
+
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -1158,6 +1162,8 @@ class PushAction(_Cleos):
                 permission_name = permission
 
             args.extend(["--permission", permission_name])
+
+        args.extend(["--expiration", str(expiration_sec)])
         if skip_signature:
             args.append("--skip-sign")
         if dont_broadcast:
@@ -1170,7 +1176,7 @@ class PushAction(_Cleos):
             args.extend(["--max-net-usage", max_net_usage])
         if  ref_block:
             args.extend(["--ref-block", ref_block])
-                        
+                      
         self.console = None
         self.data = None
         _Cleos.__init__(self, args, "push", "action", is_verbose)
